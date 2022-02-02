@@ -1,20 +1,33 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace GreetingService.API.Client;
 public static class Program
 {
-    private const string RequestUri = "http://localhost:5091/api/greeting";
+    private const string _baseAddress = "https://rafe-asp-app.azurewebsites.net";
+    //private const string _baseAddress = "http://localhost:5091";
+
     private static HttpClient _httpClient = new();
     private const string _getGreetingsCommand = "get greetings";
     private const string _getGreetingCommand = "get greeting ";
     private const string _writeGreetingCommand = "write greeting ";
     private const string _updateGreetingCommand = "update greeting ";
+    private const string _exportGreetingsCommand = "export greetings";
+    private const string _repeatingCallsCommand = "repeat calls ";
     private static string _from = "Rafe";
     private static string _to = "Anyone";
     public static async Task Main(string[] args)
     {
+
+        var authParam = Convert.ToBase64String(Encoding.UTF8.GetBytes("Rafe:summer2022"));
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authParam);
+
+        _httpClient.BaseAddress = new Uri(_baseAddress);
         Console.WriteLine("Welcome to the Greeting Service Console Client");
         Console.WriteLine("Who is sending the Greeting");
         var from = Console.ReadLine();
@@ -36,6 +49,8 @@ public static class Program
             Console.WriteLine($"{_getGreetingCommand} [id]");
             Console.WriteLine(_writeGreetingCommand);
             Console.WriteLine($"{_updateGreetingCommand} [id] [message]");
+            Console.WriteLine(_exportGreetingsCommand);
+            Console.WriteLine($"{_repeatingCallsCommand} [count]");
 
             Console.WriteLine("\nWrite command and press [enter] to execute");
 
@@ -79,6 +94,23 @@ public static class Program
                 }
 
             }
+            else if (command.Equals(_exportGreetingsCommand, StringComparison.OrdinalIgnoreCase))
+            {
+                await ExportGreetingsAsync();
+            }
+            else if (command.StartsWith(_repeatingCallsCommand))
+            {
+                var countPart = command.Replace(_repeatingCallsCommand, "");
+
+                if (int.TryParse(countPart, out var count))
+                {
+                    await RepeatCallsAsync(count);
+                }
+                else
+                {
+                    Console.WriteLine($"Could not parse {countPart} as int");
+                }
+            }
             else
             {
                 Console.WriteLine("Command has not been recongnized");
@@ -92,22 +124,27 @@ public static class Program
         Console.ReadLine();
     }
 
-    private static async Task GetGreetingsAsync()
+    private static async Task<IEnumerable<Greeting>> GetGreetingsAsync()
     {
-       var response = await _httpClient.GetAsync(RequestUri);
+       var response = await _httpClient.GetAsync("/api/greeting");
+        response.EnsureSuccessStatusCode();
         var greetingList = await response.Content.ReadAsStringAsync();
-        var greetings = JsonSerializer.Deserialize<IList<Greeting>>(greetingList);
-        Console.WriteLine(greetings);
+        var greetings = JsonSerializer.Deserialize<IEnumerable<Greeting>>(greetingList);
+
         foreach (var greeting in greetings)
         {
-            Console.WriteLine(greeting.message);
+            Console.WriteLine($"[{greeting.id}] [{greeting.timestamp}] ({greeting.from} -> {greeting.to}) - {greeting.message}");
         }
+        Console.WriteLine();
+
+        return greetings;
+
 
     }
 
     private static async Task GetGreetingAsync(Guid id)
     {
-        var totalGreetings = await _httpClient.GetAsync(RequestUri);
+        var totalGreetings = await _httpClient.GetAsync("/api/greeting");
         var greetingsString = await totalGreetings.Content.ReadAsStringAsync();
         var greetingsList = JsonSerializer.Deserialize<IList<Greeting>>(greetingsString);
         var finalGreeting =  greetingsList?.FirstOrDefault(x => x.id == id);
@@ -125,7 +162,7 @@ public static class Program
                 to = _to,
                 message = message,
             };
-            var response = await _httpClient.PostAsJsonAsync(RequestUri, greeting);
+            var response = await _httpClient.PostAsJsonAsync("/api/greeting", greeting);
             Console.WriteLine($"Wrote greeting. Service responded with: {response.StatusCode}");            //all HTTP responses always contain a status code
             Console.WriteLine();
         }
@@ -146,7 +183,7 @@ public static class Program
                 to = _to,
                 message = message,
             };
-            var response = await _httpClient.PutAsJsonAsync(RequestUri, greeting);
+            var response = await _httpClient.PutAsJsonAsync("/api/greeting", greeting);
             Console.WriteLine($"Updated greeting. Service responded with: {response.StatusCode}");
         }
         catch (Exception e)
@@ -155,5 +192,53 @@ public static class Program
         }
 
     }
-}
+
+    private static async Task ExportGreetingsAsync()
+    {
+        var response = await _httpClient.GetAsync("api/greeting");
+        response.EnsureSuccessStatusCode();                                                 //throws exception if HTTP response status is not a success status
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var greetings = JsonSerializer.Deserialize<List<Greeting>>(responseBody);
+
+        var filename = "greetingExport.xml";
+        var xmlWriterSettings = new XmlWriterSettings
+        {
+            Indent = true,
+        };
+        using var xmlWriter = XmlWriter.Create(filename, xmlWriterSettings);
+        var serializer = new XmlSerializer(typeof(List<Greeting>));                             //this xml serializer does not support serializing interfaces, need to convert to a concrete class
+        serializer.Serialize(xmlWriter, greetings);                                   //convert our greetings of type IEnumerable (interface) to List (concrete class)
+
+        Console.WriteLine($"Exported {greetings.Count()} greetings to {filename}\n");
+    }
+
+    private static async Task RepeatCallsAsync(int count)
+    {
+        var greetings = await GetGreetingsAsync();
+        var greeting = greetings.First();
+
+        //init a jobs list
+        var jobs = new List<int>();
+        
+        for (int i = 0; i < count; i++)
+        {
+            jobs.Add(i);
+        }
+
+        var stopwatch = Stopwatch.StartNew();           //use stopwatch to measure elapsed time just like a real world stopwatch
+
+        //I cheat by running multiple calls in parallel for maximum throughput - we will be limited by our cpu, wifi, internet speeds
+        //This is a bit advanced and the syntax is new with lamdas - don't worry if you don't understand all of it.
+        //I always copy this from the internet and adapt to my needs
+        //Running this in Visual Studio debugger is slow, try running .exe file directly from File Explorer or command line prompt
+        await Parallel.ForEachAsync(jobs, new ParallelOptions { MaxDegreeOfParallelism = 50 }, async (job, token) =>
+        {
+            var start = stopwatch.ElapsedMilliseconds;
+            var response = await _httpClient.GetAsync($"api/greeting/{greeting.id}");
+            var end = stopwatch.ElapsedMilliseconds;
+
+            Console.WriteLine($"Response: {response.StatusCode} - Call: {job} - latency: {end - start} ms - rate/s: {job / stopwatch.Elapsed.TotalSeconds}");
+        });
+    }
+    }
 

@@ -5,13 +5,15 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreetingService.API", "GreetingService.API\GreetingService.API.csproj", "{0820B0FF-17DD-44BE-84C6-B1D5EA6D9EAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreetingService.Core", "GreetingService.Core\GreetingService.Core.csproj", "{CD0620DC-4B12-4051-920A-680B38690674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreetingService.Core", "GreetingService.Core\GreetingService.Core.csproj", "{CD0620DC-4B12-4051-920A-680B38690674}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreetingService.Infrastructure", "GreetingService.Infrastructure\GreetingService.Infrastructure.csproj", "{15865F8B-4963-4B8B-9204-7582F5EE38AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreetingService.Infrastructure", "GreetingService.Infrastructure\GreetingService.Infrastructure.csproj", "{15865F8B-4963-4B8B-9204-7582F5EE38AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreetingService.API.Client", "reetingService.API.Client\GreetingService.API.Client.csproj", "{C9718BAB-1AAF-466A-9DE5-EEE96BB87494}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreetingService.API.Client", "reetingService.API.Client\GreetingService.API.Client.csproj", "{C9718BAB-1AAF-466A-9DE5-EEE96BB87494}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreetingService.Infrastructure.Test", "GreetingService.Infrastructure.Test\GreetingService.Infrastructure.Test.csproj", "{CBCA9748-A226-4841-B2C1-9A7704E17246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreetingService.Infrastructure.Test", "GreetingService.Infrastructure.Test\GreetingService.Infrastructure.Test.csproj", "{CBCA9748-A226-4841-B2C1-9A7704E17246}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreetingService.API.Functions", "GreetingService.API.Functions\GreetingService.API.Functions.csproj", "{DF311D9C-1C7C-4B6C-9CE3-D9778E7DE1D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{CBCA9748-A226-4841-B2C1-9A7704E17246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBCA9748-A226-4841-B2C1-9A7704E17246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBCA9748-A226-4841-B2C1-9A7704E17246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF311D9C-1C7C-4B6C-9CE3-D9778E7DE1D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF311D9C-1C7C-4B6C-9CE3-D9778E7DE1D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF311D9C-1C7C-4B6C-9CE3-D9778E7DE1D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF311D9C-1C7C-4B6C-9CE3-D9778E7DE1D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

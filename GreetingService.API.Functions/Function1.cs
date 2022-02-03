@@ -30,6 +30,7 @@ namespace GreetingService.API.Functions
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
+
         }
     }
 }

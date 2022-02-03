@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace GreetingService.API.Client;
 public static class Program
 {
-    private const string _baseAddress = "https://rafe-asp-app.azurewebsites.net";
+    private const string _baseAddress = "http://rafe-asp-dev.azurewebsites.net/";
     //private const string _baseAddress = "http://localhost:5091";
 
     private static HttpClient _httpClient = new();

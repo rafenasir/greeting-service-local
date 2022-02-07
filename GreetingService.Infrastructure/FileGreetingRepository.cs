@@ -19,7 +19,7 @@ namespace GreetingService.Infrastructure
         public FileGreetingRepository(string filePath)
         {
             _filePath = filePath;
-            if (!File.Exists(_filePath))
+            if (!File.Exists(path: _filePath))
                 File.WriteAllText(_filePath, "[]");     //init file with empty json array
         }
         public void Create(Greeting greeting)

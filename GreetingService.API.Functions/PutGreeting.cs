@@ -11,6 +11,7 @@ using GreetingService.Core;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using System.Net;
 using GreetingService.Core.Entities;
+using GreetingService.API.Functions.Authentication;
 
 namespace GreetingService.API.Functions
 {
@@ -18,10 +19,12 @@ namespace GreetingService.API.Functions
     {
         private readonly ILogger<PutGreeting> _logger;
         private readonly IGreetingRepository _greetingRepository;
+        private readonly IAuthHandler _authhandler;
 
-        public PutGreeting(ILogger<PutGreeting> logger, IGreetingRepository greetingRepository)
+        public PutGreeting(ILogger<PutGreeting> logger, IGreetingRepository greetingRepository, IAuthHandler authhandler)
         {
             _greetingRepository = greetingRepository;
+            _authhandler = authhandler;
             _logger = logger;
         }
 
@@ -31,8 +34,14 @@ namespace GreetingService.API.Functions
 
 
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "greeting/{id}")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "greeting/{id}")] HttpRequest req)
         {
+            if (!_authhandler.IsAuthorized(req))
+            
+                return new UnauthorizedResult();
+
+            
+
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
 
@@ -48,9 +57,6 @@ namespace GreetingService.API.Functions
             {
                 return new NotFoundResult();
             }
-
-
-
 
             return new AcceptedResult();
         }

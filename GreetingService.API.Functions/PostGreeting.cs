@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using GreetingService.API.Functions.Authentication;
 using GreetingService.Core;
 using GreetingService.Core.Entities;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +19,14 @@ namespace GreetingService.API.Functions
     {
         private readonly ILogger<PostGreeting> _logger;
         private readonly IGreetingRepository _greetingRepository;
+        private readonly IAuthHandler _authhandler;
 
-        public PostGreeting(ILogger<PostGreeting> log, IGreetingRepository greetingRepository)
+
+        public PostGreeting(ILogger<PostGreeting> log, IGreetingRepository greetingRepository, IAuthHandler iAuthHandler)
         {
             _logger = log;
             _greetingRepository = greetingRepository;
+            _authhandler = iAuthHandler;
         }
 
         [FunctionName("PostGreeting")]
@@ -32,6 +36,10 @@ namespace GreetingService.API.Functions
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "greeting")] HttpRequest req)
         {
+            if (!_authhandler.IsAuthorized(req))
+            {
+                return new UnauthorizedResult();   
+            }
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();

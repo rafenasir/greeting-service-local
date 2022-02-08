@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GreetingService.Infrastructure
 {
-    internal class MemoryGreetingRepository : IGreetingRepository
+    public class MemoryGreetingRepository : IGreetingRepository
     {
         private readonly IList<Greeting> _repository = new List<Greeting>();
 

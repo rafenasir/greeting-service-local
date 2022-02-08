@@ -34,7 +34,7 @@ namespace GreetingService.API.Functions
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.Accepted, Description = "Accepted")]
 
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "greeting")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "greeting")] HttpRequest req)
         {
             if (!_authhandler.IsAuthorized(req))
             {

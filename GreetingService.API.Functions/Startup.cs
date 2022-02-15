@@ -5,6 +5,8 @@ using GreetingService.Infrastructure;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using System.Reflection;
 
 [assembly: FunctionsStartup(typeof(GreetingService.API.Functions.Startup))]
 namespace GreetingService.API.Functions
@@ -13,6 +15,24 @@ namespace GreetingService.API.Functions
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            
+            var config = builder.GetContext().Configuration;
+            
+            builder.Services.AddLogging(c => { var connnectionString = config["LoggingStorageAccount"]; if(string.IsNullOrWhiteSpace(connnectionString))
+                    return;
+                var logName = $"{Assembly.GetCallingAssembly().GetName().Name}.log";
+                var logger = new LoggerConfiguration()
+                                .WriteTo.AzureBlobStorage(connnectionString, 
+                                                            restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                                                            storageFileName: "{yyyy}/{MM}/{dd}/" + logName ,
+                                                            outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}")
+                                .CreateLogger();
+                c.AddSerilog(logger, true);
+                    });
+
+
+
+
             //builder.Services.AddHttpClient();
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
             builder.Services.AddSingleton<IGreetingRepository, MemoryGreetingRepository>();

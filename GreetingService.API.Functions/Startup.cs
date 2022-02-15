@@ -32,7 +32,7 @@ namespace GreetingService.API.Functions
 
 
 
-
+            //test change
             //builder.Services.AddHttpClient();
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
             builder.Services.AddSingleton<IGreetingRepository, MemoryGreetingRepository>();

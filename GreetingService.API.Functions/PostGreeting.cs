@@ -48,7 +48,7 @@ namespace GreetingService.API.Functions
 
             try
             {
-                _greetingRepository.Create(greeting);
+                await _greetingRepository.CreateAsync(greeting);
             }
             catch
             {

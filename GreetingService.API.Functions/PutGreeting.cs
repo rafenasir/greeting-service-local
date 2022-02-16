@@ -51,7 +51,7 @@ namespace GreetingService.API.Functions
 
             try
             {
-                _greetingRepository.Update(greeting);
+               await _greetingRepository.UpdateAsync(greeting);
             }
             catch
             {

@@ -65,7 +65,7 @@ namespace GreetingService.Infrastructure.Test
         [Fact]
         public void get_should_return_correct_greeting()
         {
-            var expectedGreeting1 = _testData[0];
+            var expectedGreeting1 = _testData[1];
             var actualGreeting1 = _repository.Get(expectedGreeting1.Id);
             Assert.NotNull(actualGreeting1);
             Assert.Equal(expectedGreeting1.Id, actualGreeting1.Id);

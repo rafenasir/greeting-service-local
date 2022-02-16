@@ -34,7 +34,6 @@ namespace GreetingService.API.Functions
 
             //test change
             //builder.Services.AddHttpClient();
-            builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
             builder.Services.AddSingleton<IGreetingRepository, BlobGreetingRepository>();
 
             //builder.Services.AddScoped<IGreetingRepository, FileGreetingRepository>(c =>
@@ -43,7 +42,9 @@ namespace GreetingService.API.Functions
             //    return new FileGreetingRepository(config["FileRepositoryFilePath"]);
             //});
 
-            builder.Services.AddScoped<IUserService, AppSettingsUserService>();
+            builder.Services.AddScoped<IUserService, BlobUserService>();
+            builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
+
 
 
         }

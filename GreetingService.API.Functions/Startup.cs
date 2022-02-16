@@ -18,7 +18,9 @@ namespace GreetingService.API.Functions
             
             var config = builder.GetContext().Configuration;
             
-            builder.Services.AddLogging(c => { var connnectionString = config["LoggingStorageAccount"]; if(string.IsNullOrWhiteSpace(connnectionString))
+            builder.Services.AddLogging(c => { 
+                var connnectionString = config["LoggingStorageAccount"]; 
+                if(string.IsNullOrWhiteSpace(connnectionString))
                     return;
                 var logName = $"{Assembly.GetCallingAssembly().GetName().Name}.log";
                 var logger = new LoggerConfiguration()
@@ -29,8 +31,6 @@ namespace GreetingService.API.Functions
                                 .CreateLogger();
                 c.AddSerilog(logger, true);
                     });
-
-
 
             //test change
             //builder.Services.AddHttpClient();

@@ -35,7 +35,7 @@ namespace GreetingService.API.Functions
             //test change
             //builder.Services.AddHttpClient();
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
-            builder.Services.AddSingleton<IGreetingRepository, MemoryGreetingRepository>();
+            builder.Services.AddSingleton<IGreetingRepository, BlobGreetingRepository>();
 
             //builder.Services.AddScoped<IGreetingRepository, FileGreetingRepository>(c =>
             //{

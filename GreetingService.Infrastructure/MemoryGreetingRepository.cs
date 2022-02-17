@@ -38,6 +38,11 @@ namespace GreetingService.Infrastructure
             return _repository;
         }
 
+        public Task<IEnumerable<Greeting>> GetAsync(string from, string to)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UpdateAsync(Greeting greeting)
         {
             var existingGreeting = _repository.FirstOrDefault(x => x.Id == greeting.Id);

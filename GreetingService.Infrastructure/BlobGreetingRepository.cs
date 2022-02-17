@@ -26,7 +26,8 @@ namespace GreetingService.Infrastructure
 
         public async Task CreateAsync(Greeting greeting)
         {
-            var blob = _blobContainerClient.GetBlobClient(greeting.Id.ToString());
+            var path = $"{greeting.From}/{greeting.To}/{greeting.Id}";
+            var blob = _blobContainerClient.GetBlobClient(path);
             if (await blob.ExistsAsync())
             {
                 throw new Exception($"Greeting with the ID {greeting.Id} already exists");

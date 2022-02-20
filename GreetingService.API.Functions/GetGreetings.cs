@@ -44,7 +44,13 @@ namespace GreetingService.API.Functions
             }
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var greetings = await _greetingRepository.GetAsync();
+
+
+            var from = req.Query["from"];
+            var to = req.Query["to"];
+
+            var greetings = await _greetingRepository.GetAsync(from, to);
+
             return new OkObjectResult(greetings);
         }
     }

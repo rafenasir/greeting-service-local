@@ -3,6 +3,7 @@ using GreetingService.Core;
 using GreetingService.Core.Interfaces;
 using GreetingService.Infrastructure;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -44,6 +45,11 @@ namespace GreetingService.API.Functions
 
             builder.Services.AddScoped<IUserService, BlobUserService>();
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
+
+            builder.Services.AddDbContext<GreetingDbContext>(options =>
+            {
+                options.UseSqlServer(config["GreetingDbConnectionString"]);
+            });
 
 
 

@@ -112,4 +112,4 @@ jobs:
           azcliversion: 2.30.0
           inlineScript: |
             az group create -l westeurope -n rafe-rg-dev
-            az deployment group create --resource-group rafe-rg-dev --template-file ./azure_resources.bicep --parameters appName=rafefunctiondev
+            az deployment group create --resource-group rafe-rg-dev --template-file ./azure_resources.bicep --parameters appName=rafefunctiondev sqlAdminPassword=${{ secrets.SQLPASSWORD }}

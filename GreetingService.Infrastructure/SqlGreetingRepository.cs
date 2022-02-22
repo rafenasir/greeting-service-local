@@ -1,5 +1,6 @@
 ﻿using GreetingService.Core;
 using GreetingService.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,10 @@ namespace GreetingService.Infrastructure
             _greetingDbContext = greeting;
         }
         
-        public Task CreateAsync(Greeting greeting)
+        public async Task CreateAsync(Greeting greeting)
         {
-            throw new NotImplementedException();
+            await _greetingDbContext.Greetings.AddAsync(greeting);
+            await _greetingDbContext.SaveChangesAsync();
         }
 
         public Task DeleteRecordAsync(Guid id)
@@ -26,14 +28,18 @@ namespace GreetingService.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task<Greeting> GetAsync(Guid id)
+        public async Task<Greeting> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var greeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == id);             //Can use LINQ to query the db. EF Core will translate this to T-SQL before sending to the db
+            if (greeting == null)
+                throw new Exception("Not found");
+
+            return greeting;
         }
 
-        public Task<IEnumerable<Greeting>> GetAsync()
+        public async Task<IEnumerable<Greeting>> GetAsync()
         {
-            throw new NotImplementedException();
+            return await _greetingDbContext.Greetings.ToListAsync();
         }
 
         public Task<IEnumerable<Greeting>> GetAsync(string from, string to)
@@ -41,9 +47,17 @@ namespace GreetingService.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Greeting greeting)
+        public async Task UpdateAsync(Greeting greeting)
         {
-            throw new NotImplementedException();
+            var existingGreeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == greeting.Id);            //get a handle on the greeting in the db
+            if (existingGreeting == null)
+                throw new Exception("Not found");
+
+            existingGreeting.Message = greeting.Message;                                                                        //update the properties
+            existingGreeting.To = greeting.To;
+            existingGreeting.From = greeting.From;
+
+            await _greetingDbContext.SaveChangesAsync();
         }
     }
 }

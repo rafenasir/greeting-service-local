@@ -1,4 +1,6 @@
 param appName string
+param sqlAdminUser string = 'rafe'
+param sqlAdminPassword string
 param location string = resourceGroup().location
 
 // storage accounts must be between 3 and 24 characters in length and use numbers and lower-case letters only
@@ -6,6 +8,8 @@ var storageAccountName = '${substring(appName,0,10)}${uniqueString(resourceGroup
 var logginStorageAccountName = '${substring(appName,0,7)}log${uniqueString(resourceGroup().id)}' 
 var hostingPlanName = '${appName}${uniqueString(resourceGroup().id)}'
 var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
+var sqlServerName = 'rafegreeting-sqldb-dev'
+var sqlDbName = 'greeting-sqldb-dev'
 var functionAppName = '${appName}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
@@ -93,6 +97,10 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
           'value': '/home/site/wwwroot/greeting.json'
         }
         {
+          'name': 'GreetingDbConnectionString'
+          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=\'${sqlAdminPassword}\';'
+        }
+        {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
@@ -101,6 +109,38 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
       ]
     }
   }
-
   
 }
+
+resource sqlServer 'Microsoft.Sql/servers@2019-06-01-preview' = {
+  name: sqlServerName
+  location: location
+  properties: {
+    administratorLogin: sqlAdminUser
+    administratorLoginPassword: sqlAdminPassword
+    version: '12.0'
+  }
+  
+  resource allowAllWindowsAzureIps 'firewallRules@2021-05-01-preview' = {
+    name: 'AllowAllWindowsAzureIps'
+    properties: {
+      endIpAddress: '0.0.0.0'
+      startIpAddress: '0.0.0.0'
+    }
+  }
+
+  resource sqlDb 'databases@2019-06-01-preview' = {
+    name: sqlDbName
+    location: location
+    sku: {
+      name: 'Basic'
+      tier: 'Basic'
+      capacity: 5
+    }
+  }
+  
+}
+
+
+
+

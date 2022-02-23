@@ -1,6 +1,6 @@
 param appName string
 param sqlAdminUser string = 'rafe'
-param sqlAdminPassword string = 'Handm"2021'
+param sqlAdminPassword string
 param location string = resourceGroup().location
 
 // storage accounts must be between 3 and 24 characters in length and use numbers and lower-case letters only
@@ -98,7 +98,7 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           'name': 'GreetingDbConnectionString'
-          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=\'${sqlAdminPassword}\';'
+          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=Handm"2021;'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
@@ -137,10 +137,5 @@ resource sqlServer 'Microsoft.Sql/servers@2019-06-01-preview' = {
       tier: 'Basic'
       capacity: 5
     }
-  }
-  
+  } 
 }
-
-
-
-

@@ -11,6 +11,7 @@ namespace GreetingService.Infrastructure
     public class GreetingDbContext: DbContext
     {
         public DbSet<Greeting> Greetings { get; set; }
+
         public GreetingDbContext()
         {
         }

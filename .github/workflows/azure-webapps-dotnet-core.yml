@@ -81,14 +81,14 @@ jobs:
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ Secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          publish-profile: ${{ Secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           
   deploy_bicep:
@@ -104,7 +104,7 @@ jobs:
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ Secrets.AZURE_CREDENTIALS }}
           
       - name: Azure CLI script
         uses: azure/CLI@v1
@@ -112,4 +112,4 @@ jobs:
           azcliversion: 2.30.0
           inlineScript: |
             az group create -l westeurope -n rafe-rg-dev
-            az deployment group create --resource-group rafe-rg-dev --template-file ./azure_resources.bicep --parameters appName=rafefunctiondev sqlAdminPassword=${{ secrets.SQLPASSWORD }}
+            az deployment group create --resource-group rafe-rg-dev --template-file ./azure_resources.bicep --parameters appName=rafefunctiondev sqlAdminPassword=${{ Secrets.SQLPASSWORD }}

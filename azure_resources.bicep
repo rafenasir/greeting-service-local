@@ -1,6 +1,6 @@
 param appName string
 param sqlAdminUser string = 'rafe'
-param sqlAdminPassword string
+param sqlAdminPassword string = 'Handm"2021'
 param location string = resourceGroup().location
 
 // storage accounts must be between 3 and 24 characters in length and use numbers and lower-case letters only

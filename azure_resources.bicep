@@ -8,9 +8,9 @@ var storageAccountName = '${substring(appName,0,10)}${uniqueString(resourceGroup
 var logginStorageAccountName = '${substring(appName,0,7)}log${uniqueString(resourceGroup().id)}' 
 var hostingPlanName = '${appName}${uniqueString(resourceGroup().id)}'
 var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
-var sqlServerName = 'rafegreeting-sqldb-dev'
-var sqlDbName = 'greeting-sqldb-dev'
 var functionAppName = '${appName}'
+var sqlServerName = '${appName}sqlserver'
+var sqlDbName = '${appName}sqldb'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName

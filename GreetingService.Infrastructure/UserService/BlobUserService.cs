@@ -72,5 +72,30 @@ namespace GreetingService.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        Task IUserService.CreateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.DeleteUser(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<User> IUserService.GetUser(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<User>> IUserService.GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IUserService.UpdateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

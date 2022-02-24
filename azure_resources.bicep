@@ -1,5 +1,5 @@
 param appName string
-param sqlAdminUser string = 'rafeNewSql'
+param sqlAdminUser string = 'rafe'
 param sqlAdminPassword string
 param location string = resourceGroup().location
 

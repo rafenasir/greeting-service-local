@@ -17,11 +17,11 @@ namespace GreetingService.Infrastructure
         private readonly BlobContainerClient _blobContainerClient;
         private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
-        public BlobGreetingRepository(IConfiguration configuration)                 //ask for an IConfiguration here and dependency injection will provide it for us
+        public BlobGreetingRepository(IConfiguration configuration)                 
         {
-            var connectionString = configuration["LoggingStorageAccount"];          //get connection string from our app configuration
+            var connectionString = configuration["LoggingStorageAccount"];         
             _blobContainerClient = new BlobContainerClient(connectionString, _blobContainerName);
-            _blobContainerClient.CreateIfNotExists();                               //create the container if it does not already exist
+            _blobContainerClient.CreateIfNotExists();                             
         }
 
         public async Task CreateAsync(Greeting greeting)

@@ -36,7 +36,7 @@ namespace GreetingService.API.Functions
 
             //test change
             //builder.Services.AddHttpClient();
-            builder.Services.AddSingleton<IGreetingRepository, SqlGreetingRepository>();
+            builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
 
             //builder.Services.AddScoped<IGreetingRepository, FileGreetingRepository>(c =>
             //{
@@ -45,6 +45,7 @@ namespace GreetingService.API.Functions
             //});
 
             builder.Services.AddScoped<IUserService, SqlUserService>();
+
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
 
             builder.Services.AddDbContext<GreetingDbContext>(options =>

@@ -98,7 +98,7 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           'name': 'GreetingDbConnectionString'
-          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=Handm"2021;'
+          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=${sqlAdminPassword};'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'

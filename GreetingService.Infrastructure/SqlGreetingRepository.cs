@@ -30,7 +30,7 @@ namespace GreetingService.Infrastructure
 
         public async Task<Greeting> GetAsync(Guid id)
         {
-            var greeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == id);             //Can use LINQ to query the db. EF Core will translate this to T-SQL before sending to the db
+            var greeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == id);             
             if (greeting == null)
                 throw new Exception("Not found");
 
@@ -49,11 +49,11 @@ namespace GreetingService.Infrastructure
 
         public async Task UpdateAsync(Greeting greeting)
         {
-            var existingGreeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == greeting.Id);            //get a handle on the greeting in the db
+            var existingGreeting = await _greetingDbContext.Greetings.FirstOrDefaultAsync(x => x.Id == greeting.Id);            
             if (existingGreeting == null)
                 throw new Exception("Not found");
 
-            existingGreeting.Message = greeting.Message;                                                                        //update the properties
+            existingGreeting.Message = greeting.Message;                                                                   
             existingGreeting.To = greeting.To;
             existingGreeting.From = greeting.From;
 

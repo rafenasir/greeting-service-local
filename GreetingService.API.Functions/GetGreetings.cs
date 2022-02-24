@@ -49,7 +49,7 @@ namespace GreetingService.API.Functions
             var from = req.Query["from"];
             var to = req.Query["to"];
 
-            var greetings = await _greetingRepository.GetAsync(from, to);
+            var greetings = await _greetingRepository.GetAsync();
 
             return new OkObjectResult(greetings);
         }

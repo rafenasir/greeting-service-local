@@ -32,6 +32,21 @@ namespace GreetingService.Infrastructure
             //Tell EF Core that the primary key of User table is email
             modelBuilder.Entity<User>()
                 .HasKey(c => c.Email);
+
+            modelBuilder.Entity<Greeting>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.From)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Greeting>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.To)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
 
 

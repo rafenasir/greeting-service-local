@@ -36,7 +36,6 @@ namespace GreetingService.API.Functions
 
             //test change
             //builder.Services.AddHttpClient();
-            builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
 
             //builder.Services.AddScoped<IGreetingRepository, FileGreetingRepository>(c =>
             //{
@@ -44,7 +43,11 @@ namespace GreetingService.API.Functions
             //    return new FileGreetingRepository(config["FileRepositoryFilePath"]);
             //});
 
+
+            builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
             builder.Services.AddScoped<IUserService, SqlUserService>();
+            builder.Services.AddScoped<IInvoiceService, SqlInvoiceService>();
+
 
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
 

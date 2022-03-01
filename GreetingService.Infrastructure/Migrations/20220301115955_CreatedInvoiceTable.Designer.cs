@@ -4,6 +4,7 @@ using GreetingService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GreetingService.Infrastructure.Migrations
 {
     [DbContext(typeof(GreetingDbContext))]
-    partial class GreetingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220301115955_CreatedInvoiceTable")]
+    partial class CreatedInvoiceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,6 @@ namespace GreetingService.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("InvoiceId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -50,43 +49,9 @@ namespace GreetingService.Infrastructure.Migrations
 
                     b.HasIndex("From");
 
-                    b.HasIndex("InvoiceId");
-
                     b.HasIndex("To");
 
                     b.ToTable("Greetings");
-                });
-
-            modelBuilder.Entity("GreetingService.Core.Entities.Invoice", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CostPerGreeting")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserEmail");
-
-                    b.ToTable("invoices");
                 });
 
             modelBuilder.Entity("GreetingService.Core.User", b =>
@@ -125,31 +90,11 @@ namespace GreetingService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GreetingService.Core.Entities.Invoice", null)
-                        .WithMany("Greetings")
-                        .HasForeignKey("InvoiceId");
-
                     b.HasOne("GreetingService.Core.User", null)
                         .WithMany()
                         .HasForeignKey("To")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GreetingService.Core.Entities.Invoice", b =>
-                {
-                    b.HasOne("GreetingService.Core.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserEmail")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GreetingService.Core.Entities.Invoice", b =>
-                {
-                    b.Navigation("Greetings");
                 });
 #pragma warning restore 612, 618
         }

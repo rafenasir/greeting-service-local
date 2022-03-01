@@ -1,115 +1,115 @@
-﻿//using GreetingService.Core.Entities;
-//using GreetingService.Infrastructure;
-//using GreetingService.Core;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Text.Json;
-//using Xunit;
+﻿//using greetingservice.core.entities;
+//using greetingservice.infrastructure;
+//using greetingservice.core;
+//using system;
+//using system.collections.generic;
+//using system.io;
+//using system.linq;
+//using system.text.json;
+//using xunit;
 
-//namespace GreetingService.Infrastructure.Test
+//namespace greetingservice.infrastructure.test
 //{
-//    public class FileGreetingRepositoryTest
+//    public class filegreetingrepositorytest
 //    {
-//        public FileGreetingRepository _repository { get; set; }
+//        public filegreetingrepository _repository { get; set; }
 
-//        private readonly string _filePath;
-//        private readonly List<Greeting> _testData;
+//        private readonly string _filepath;
+//        private readonly list<greeting> _testdata;
 
-//        public FileGreetingRepositoryTest()
+//        public filegreetingrepositorytest()
 //        {
-//            _filePath = $"greeting_unit_test_{DateTime.Now:yyyyMMddHHmmss}.json";
-//            _repository = new FileGreetingRepository(_filePath);
+//            _filepath = $"greeting_unit_test_{datetime.now:yyyymmddhhmmss}.json";
+//            _repository = new filegreetingrepository(_filepath);
 
-//            _testData = new List<Greeting>
+//            _testdata = new list<greeting>
 //            {
-//                new Greeting
+//                new greeting
 //                {
-//                    From = "from1",
-//                    To = "to1",
-//                    Message = "message1",
+//                    from = "from1",
+//                    to = "to1",
+//                    message = "message1",
 //                },
-//                new Greeting
+//                new greeting
 //                {
-//                    From = "from2",
-//                    To = "to2",
-//                    Message = "message2",
+//                    from = "from2",
+//                    to = "to2",
+//                    message = "message2",
 //                },
-//                new Greeting
+//                new greeting
 //                {
-//                    From = "from3",
-//                    To = "to3",
-//                    Message = "message3",
+//                    from = "from3",
+//                    to = "to3",
+//                    message = "message3",
 //                },
-//                new Greeting
+//                new greeting
 //                {
-//                    From = "from4",
-//                    To = "to4",
-//                    Message = "message4",
+//                    from = "from4",
+//                    to = "to4",
+//                    message = "message4",
 //                },
 //            };
 
-//            File.WriteAllText(_filePath, JsonSerializer.Serialize(_testData, new JsonSerializerOptions { WriteIndented = true }));
+//            file.writealltext(_filepath, jsonserializer.serialize(_testdata, new jsonserializeroptions { writeindented = true }));
 //        }
 
-//        [Fact]
+//        [fact]
 //        public void get_should_return_empty_collection()
 //        {
-//            var greetings = _repository.GetAsync();
-//            Assert.NotNull(greetings);
-//            Assert.NotEmpty(greetings);
-//            Assert.Equal(_testData.Count(), greetings.Count());
+//            var greetings = _repository.getasync();
+//            assert.notnull(greetings);
+//            assert.notempty(greetings);
+//            assert.equal(_testdata.count(), greetings.count());
 //        }
 
-//        [Fact]
+//        [fact]
 //        public void get_should_return_correct_greeting()
 //        {
-//            var expectedGreeting1 = _testData[1];
-//            var actualGreeting1 = _repository.GetAsync(expectedGreeting1.Id);
-//            Assert.NotNull(actualGreeting1);
-//            Assert.Equal(expectedGreeting1.Id, actualGreeting1.Id);
+//            var expectedgreeting1 = _testdata[1];
+//            var actualgreeting1 = _repository.getasync(expectedgreeting1.id);
+//            assert.notnull(actualgreeting1);
+//            assert.equal(expectedgreeting1.id, actualgreeting1.id);
 
-//            var expectedGreeting2 = _testData[1];
-//            var actualGreeting2 = _repository.GetAsync(expectedGreeting2.Id);
-//            Assert.NotNull(actualGreeting2);
-//            Assert.Equal(expectedGreeting2.Id, actualGreeting2.Id);
+//            var expectedgreeting2 = _testdata[1];
+//            var actualgreeting2 = _repository.getasync(expectedgreeting2.id);
+//            assert.notnull(actualgreeting2);
+//            assert.equal(expectedgreeting2.id, actualgreeting2.id);
 //        }
 
-//        [Fact]
+//        [fact]
 //        public void post_should_persist_to_file()
 //        {
-//            var greetingsBeforeCreate = _repository.GetAsync();
+//            var greetingsbeforecreate = _repository.getasync();
 
-//            var newGreeting = new Greeting
+//            var newgreeting = new greeting
 //            {
-//                From = "post_test",
-//                To = "post_test",
-//                Message = "post_test",
+//                from = "post_test",
+//                to = "post_test",
+//                message = "post_test",
 //            };
 
-//            _repository.Create(newGreeting);
+//            _repository.create(newgreeting);
 
-//            var greetingsAfterCreate = _repository.GetAsync();
+//            var greetingsaftercreate = _repository.getasync();
 
-//            Assert.Equal(greetingsBeforeCreate.Count() + 1, greetingsAfterCreate.Count());
+//            assert.equal(greetingsbeforecreate.count() + 1, greetingsaftercreate.count());
 //        }
 
-//        [Fact]
+//        [fact]
 //        public void update_should_persist_to_file()
 //        {
-//            var greetings = _repository.Get();
+//            var greetings = _repository.get();
 
-//            var firstGreeting = greetings.First();
-//            var firstGreetingMessage = firstGreeting.Message;
+//            var firstgreeting = greetings.first();
+//            var firstgreetingmessage = firstgreeting.message;
 
-//            var testMessage = "new updated message";
-//            firstGreeting.Message = testMessage;
+//            var testmessage = "new updated message";
+//            firstgreeting.message = testmessage;
 
-//            _repository.Update(firstGreeting);
+//            _repository.update(firstgreeting);
 
-//            var firstGreetingAfterUpdate = _repository.Get(firstGreeting.Id);
-//            Assert.Equal(testMessage, firstGreetingAfterUpdate.Message);
+//            var firstgreetingafterupdate = _repository.get(firstgreeting.id);
+//            assert.equal(testmessage, firstgreetingafterupdate.message);
 //        }
 //    }
 //}

@@ -13,6 +13,7 @@ namespace GreetingService.Infrastructure
     {
         public DbSet<Greeting> Greetings { get; set; }
         public DbSet<User> user { get; set; }
+        public DbSet<Invoice> invoices { get; set; }
 
         public GreetingDbContext()
         {

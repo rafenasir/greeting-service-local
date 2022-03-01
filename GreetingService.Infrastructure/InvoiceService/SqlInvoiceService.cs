@@ -33,14 +33,24 @@ namespace GreetingService.Infrastructure
             }
         }
 
-        public Task<Invoice> GetInvoiceAsync(int year, int month, string email)
+        public async Task<Invoice> GetInvoiceAsync(int year, int month, string email)
         {
-            throw new NotImplementedException();
+            var invoice = await _greetingDbContext.invoices
+                .Include(x => x.Greetings)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Year == year && x.Month == month && x.User.Email.Equals(email));
+            return invoice;
         }
 
-        public Task<IEnumerable<Invoice>> GetInvoicesAsync(int year, int month)
+        public async Task<IEnumerable<Invoice>> GetInvoicesAsync(int year, int month)
         {
-            throw new NotImplementedException();
+            var invoices = await _greetingDbContext.invoices
+                            .Include(x => x.Greetings)
+                            .Include(x => x.User)
+                            .Where(x => x.Year == year && x.Month == month)
+                            .ToListAsync();
+
+            return invoices;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace GreetingService.API.Functions.InvoiceFunctions
 
 
         [FunctionName("ComputeInvoices")]
-        public async Task Run([TimerTrigger("*/5 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 

@@ -19,7 +19,7 @@ namespace GreetingService.Infrastructure
 
         public async Task CreateOrUpdateInvoiceAsync(Invoice invoice)
         {
-            var existingInvoice = await _greetingDbContext.invoices.FirstOrDefaultAsync(x => x.Year == invoice.Year && x.Month == invoice.Month && x.User.Email.Equals(invoice.User.Email));
+            var existingInvoice = await _greetingDbContext.Invoices.FirstOrDefaultAsync(x => x.Year == invoice.Year && x.Month == invoice.Month && x.User.Email.Equals(invoice.User.Email));
             if (existingInvoice == null)
             {
                 await _greetingDbContext.AddAsync(invoice);
@@ -35,7 +35,7 @@ namespace GreetingService.Infrastructure
 
         public async Task<Invoice> GetInvoiceAsync(int year, int month, string email)
         {
-            var invoice = await _greetingDbContext.invoices
+            var invoice = await _greetingDbContext.Invoices
                 .Include(x => x.Greetings)
                 .Include(x => x.User)
                 .FirstOrDefaultAsync(x => x.Year == year && x.Month == month && x.User.Email.Equals(email));
@@ -44,7 +44,7 @@ namespace GreetingService.Infrastructure
 
         public async Task<IEnumerable<Invoice>> GetInvoicesAsync(int year, int month)
         {
-            var invoices = await _greetingDbContext.invoices
+            var invoices = await _greetingDbContext.Invoices
                             .Include(x => x.Greetings)
                             .Include(x => x.User)
                             .Where(x => x.Year == year && x.Month == month)

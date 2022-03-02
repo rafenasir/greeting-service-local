@@ -8,7 +8,7 @@ namespace GreetingService.Core.Entities
 {
     public class Invoice
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public User User { get; set; }
         public IEnumerable<Greeting> Greetings { get; set; }
         public int Year { get; set; }

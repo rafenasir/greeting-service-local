@@ -32,8 +32,8 @@ namespace GreetingService.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("InvoiceId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -59,8 +59,11 @@ namespace GreetingService.Infrastructure.Migrations
 
             modelBuilder.Entity("GreetingService.Core.Entities.Invoice", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("CostPerGreeting")
                         .HasColumnType("int");
@@ -86,7 +89,7 @@ namespace GreetingService.Infrastructure.Migrations
 
                     b.HasIndex("UserEmail");
 
-                    b.ToTable("invoices");
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("GreetingService.Core.User", b =>
@@ -114,7 +117,7 @@ namespace GreetingService.Infrastructure.Migrations
 
                     b.HasKey("Email");
 
-                    b.ToTable("user");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("GreetingService.Core.Entities.Greeting", b =>

@@ -27,7 +27,7 @@ namespace GreetingService.Infrastructure.UserService
         {
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
-            await _greetingDbContext.user.AddAsync(user);
+            await _greetingDbContext.Users.AddAsync(user);
             await _greetingDbContext.SaveChangesAsync();
         }
 
@@ -38,19 +38,19 @@ namespace GreetingService.Infrastructure.UserService
 
         public async Task<User> GetUser(string email)
         {
-            var user = await _greetingDbContext.user.FirstOrDefaultAsync(x => x.Email == email);
+            var user = await _greetingDbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
 
             return user;
         }
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _greetingDbContext.user.ToListAsync();
+            return await _greetingDbContext.Users.ToListAsync();
         }
 
         public bool IsValidUser(string username, string password)
         {
-            var user = _greetingDbContext.user.FirstOrDefault(x => x.Email.Equals(username));
+            var user = _greetingDbContext.Users.FirstOrDefault(x => x.Email.Equals(username));
             if (user != null && user.Password.Equals(password))
                 return true;
 

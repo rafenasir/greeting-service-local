@@ -1,7 +1,9 @@
-﻿using GreetingService.API.Functions.Authentication;
+﻿using Azure.Messaging.ServiceBus;
+using GreetingService.API.Functions.Authentication;
 using GreetingService.Core;
 using GreetingService.Core.Interfaces;
 using GreetingService.Infrastructure;
+using GreetingService.Infrastructure.MessagingService;
 using GreetingService.Infrastructure.UserService;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -34,26 +36,23 @@ namespace GreetingService.API.Functions
                 c.AddSerilog(logger, true);
                     });
 
-            //test change
-            //builder.Services.AddHttpClient();
-
-            //builder.Services.AddScoped<IGreetingRepository, FileGreetingRepository>(c =>
-            //{
-            //    var config = c.GetService<IConfiguration>();
-            //    return new FileGreetingRepository(config["FileRepositoryFilePath"]);
-            //});
-
-
             builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
             builder.Services.AddScoped<IUserService, SqlUserService>();
             builder.Services.AddScoped<IInvoiceService, SqlInvoiceService>();
-
-
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
+            builder.Services.AddScoped<IMessagingService, ServiceBusMessagingService>();
+
 
             builder.Services.AddDbContext<GreetingDbContext>(options =>
             {
                 options.UseSqlServer(config["GreetingDbConnectionString"]);
+
+            });
+
+            builder.Services.AddSingleton(c =>
+            {
+                var serviceBusClient = new ServiceBusClient(config["ServiceBusConnectionString"]);      //remember to add this connection to the application configuration
+                return serviceBusClient.CreateSender("main");
             });
 
 

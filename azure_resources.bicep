@@ -146,7 +146,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
   name: serviceBusName
   location: location
   sku: {
-    name: 'Basic'
+    name: 'Standard'
   }
   resource mainTopic 'topics@2021-06-01-preview' = {
     name: 'main'

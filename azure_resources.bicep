@@ -11,6 +11,8 @@ var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
 var functionAppName = '${appName}'
 var sqlServerName = '${appName}sqlserver'
 var sqlDbName = '${appName}sqldb'
+var serviceBusName = '${appName}servicebus'
+
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName
@@ -138,4 +140,29 @@ resource sqlServer 'Microsoft.Sql/servers@2019-06-01-preview' = {
       capacity: 5
     }
   } 
+}
+
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
+  name: serviceBusName
+  location: location
+  sku: {
+    name: 'Basic'
+  }
+  resource mainTopic 'topics@2021-11-01' = {
+    name: 'main'
+
+    resource greetingCreateSubscription 'subscriptions@2021-11-01' = {
+      name: 'greeting_create'
+
+      resource subscriptionRule 'rules@2021-11-01' = {
+        name: 'subject'
+        properties: {
+          correlationFilter: {
+            label: 'NewGreeting' 
+          }
+          filterType: 'CorrelationFilter'
+        }
+      }
+    }
+  }
 }

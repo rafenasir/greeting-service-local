@@ -142,19 +142,19 @@ resource sqlServer 'Microsoft.Sql/servers@2019-06-01-preview' = {
   } 
 }
 
-resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' = {
   name: serviceBusName
   location: location
   sku: {
     name: 'Basic'
   }
-  resource mainTopic 'topics@2021-11-01' = {
+  resource mainTopic 'topics@2021-06-01-preview' = {
     name: 'main'
 
-    resource greetingCreateSubscription 'subscriptions@2021-11-01' = {
+    resource greetingCreateSubscription 'subscriptions@2021-06-01-preview' = {
       name: 'greeting_create'
 
-      resource subscriptionRule 'rules@2021-11-01' = {
+      resource subscriptionRule 'rules@2021-06-01-preview' = {
         name: 'subject'
         properties: {
           correlationFilter: {

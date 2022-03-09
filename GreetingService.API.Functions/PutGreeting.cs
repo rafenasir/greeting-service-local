@@ -12,18 +12,20 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using System.Net;
 using GreetingService.Core.Entities;
 using GreetingService.API.Functions.Authentication;
+using GreetingService.Core.Interfaces;
+using GreetingService.Core.Enums;
 
 namespace GreetingService.API.Functions
 {
     public class PutGreeting
     {
         private readonly ILogger<PutGreeting> _logger;
-        private readonly IGreetingRepository _greetingRepository;
+        private readonly IMessagingService _messagingService;
         private readonly IAuthHandler _authhandler;
 
-        public PutGreeting(ILogger<PutGreeting> logger, IGreetingRepository greetingRepository, IAuthHandler authhandler)
+        public PutGreeting(ILogger<PutGreeting> logger, IMessagingService messagingService, IAuthHandler authhandler)
         {
-            _greetingRepository = greetingRepository;
+            _messagingService = messagingService;
             _authhandler = authhandler;
             _logger = logger;
         }
@@ -46,12 +48,11 @@ namespace GreetingService.API.Functions
 
 
             var requestBody = await req.ReadAsStringAsync();
-            //var greetingUpdate = JsonSerializer.Deserialize<Greeting>(requestBody);
             var greeting = JsonConvert.DeserializeObject<Greeting>(requestBody);
 
             try
             {
-               await _greetingRepository.UpdateAsync(greeting);
+               await _messagingService.SendAsync(greeting, MessagingServiceSubject.UpdateGreeting);
             }
             catch
             {

@@ -27,5 +27,7 @@ namespace GreetingService.Infrastructure.MessagingService
 
             await _serviceBusSender.SendMessageAsync(serviceBusMessage);
         }
+
+     
     }
 }

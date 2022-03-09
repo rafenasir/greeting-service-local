@@ -168,7 +168,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
       name: 'greeting_put'
 
       resource subscriptionRule 'rules@2021-06-01-preview' = {
-        name: 'update'
+        name: 'subject'
         properties: {
           correlationFilter: {
             label: 'UpdateGreeting' 

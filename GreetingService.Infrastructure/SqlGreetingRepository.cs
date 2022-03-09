@@ -56,6 +56,7 @@ namespace GreetingService.Infrastructure
             existingGreeting.Message = greeting.Message;                                                                   
             existingGreeting.To = greeting.To;
             existingGreeting.From = greeting.From;
+            existingGreeting.Timestamp = greeting.Timestamp;
 
             await _greetingDbContext.SaveChangesAsync();
         }

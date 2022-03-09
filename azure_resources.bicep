@@ -177,5 +177,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
         }
       }
     }
+    resource invoiceComputeSubscription 'subscriptions@2021-06-01-preview' = {
+      name: 'greeting_compute_billing'
+
+      resource subscriptionRule 'rules@2021-06-01-preview' = {
+        name: 'subject'
+        properties: {
+          correlationFilter: {
+            label: 'NewGreeting' 
+          }
+          filterType: 'CorrelationFilter'
+        }
+      }
+    }
   }
 }

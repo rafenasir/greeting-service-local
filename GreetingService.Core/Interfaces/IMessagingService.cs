@@ -10,5 +10,6 @@ namespace GreetingService.Core.Interfaces
     public interface IMessagingService
     {
         public Task SendAsync<T>(T message, MessagingServiceSubject subject);
+
     }
 }

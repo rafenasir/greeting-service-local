@@ -11,7 +11,7 @@ var appInsightsName = '${appName}${uniqueString(resourceGroup().id)}'
 var functionAppName = '${appName}'
 var sqlServerName = '${appName}sqlserver'
 var sqlDbName = '${appName}sqldb'
-var serviceBusName = '${appName}servicebus'
+var serviceBusName = 'rafe-sb-dev'
 
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {

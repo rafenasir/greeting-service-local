@@ -164,5 +164,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
         }
       }
     }
+    resource greetingUpdateSubscription 'subscriptions@2021-06-01-preview' = {
+      name: 'greeting_put'
+
+      resource subscriptionRule 'rules@2021-06-01-preview' = {
+        name: 'update'
+        properties: {
+          correlationFilter: {
+            label: 'UpdateGreeting' 
+          }
+          filterType: 'CorrelationFilter'
+        }
+      }
+    }
   }
 }

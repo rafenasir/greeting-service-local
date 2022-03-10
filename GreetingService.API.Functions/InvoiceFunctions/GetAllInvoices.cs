@@ -36,7 +36,7 @@ namespace GreetingService.API.Functions.InvoiceFunctions
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            if (!await _authHandler.IsAuthorizedAsync(req))
+            if (!_authHandler.IsAuthorized(req))
             {
                 return new UnauthorizedResult();
             }

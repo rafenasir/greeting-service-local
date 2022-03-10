@@ -38,7 +38,7 @@ namespace GreetingService.API.Functions
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "greeting")] HttpRequest req)
         {
-            if (!await _authhandler.IsAuthorizedAsync(req))
+            if (!_authhandler.IsAuthorized(req))
             
                 return new UnauthorizedResult();
 

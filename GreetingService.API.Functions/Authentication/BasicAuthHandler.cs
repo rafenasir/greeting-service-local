@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace GreetingService.API.Functions.Authentication
 {
-
     public class BasicAuthHandler : IAuthHandler
     {
         private readonly IUserService _userService;
+
 
         public BasicAuthHandler(IUserService userService)
         {
             _userService = userService;
         }
 
-        public async Task<bool> IsAuthorizedAsync(HttpRequest req)
+        public bool IsAuthorized(HttpRequest req)
         {
             try
             {
@@ -29,21 +29,21 @@ namespace GreetingService.API.Functions.Authentication
                 if (!string.IsNullOrWhiteSpace(authHeader))
                 {
                     var authHeaderValue = AuthenticationHeaderValue.Parse(authHeader);
-                    if (authHeaderValue.Scheme.Equals(AuthenticationSchemes.Basic.ToString(), StringComparison.OrdinalIgnoreCase))
+                    if(authHeaderValue.Scheme.Equals(AuthenticationSchemes.Basic.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
                         var credentials = Encoding.UTF8
-                                            .GetString(Convert.FromBase64String(authHeaderValue.Parameter ?? string.Empty))         //decode base64encoded string to normal strings to parse username:password - don't confuse this with encryption, anybody with access to the encoded string can decode it like this
-                                            .Split(':', 2);
+                                          .GetString(Convert.FromBase64String(authHeaderValue.Parameter ?? String.Empty))
+                                          .Split(':', 2);
                         if (credentials.Length == 2)
                         {
-                            if (await _userService.IsValidUserAsync(credentials[0], credentials[1]))
+                            var isValid = _userService.IsValidUser(credentials[0], credentials[1]);
+                            if (isValid)
                             {
                                 return true;
                             }
                         }
                     }
                 }
-
                 return false;
             }
             catch (FormatException)
@@ -52,5 +52,9 @@ namespace GreetingService.API.Functions.Authentication
             }
         }
 
+        public Task<bool> IsAuthorizedAsync(HttpRequest req)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

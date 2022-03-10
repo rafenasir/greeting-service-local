@@ -18,12 +18,12 @@ namespace GreetingService.Infrastructure
             _configuration = configuration;
         }
 
-        public Task CreateUser(User user)
+        public Task CreateUserAsync(User user)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteUser(string email)
+        public Task DeleteUserAsync(string email)
         {
             throw new NotImplementedException();
         }
@@ -40,14 +40,26 @@ namespace GreetingService.Infrastructure
 
         public bool IsValidUser(string username, string password)
         {
-            var entries = _configuration.AsEnumerable().ToDictionary(x => x.Key, x => x.Value);
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> IsValidUserAsync(string username, string password)
+        {
+            var entries =  _configuration.AsEnumerable().ToDictionary(x => x.Key, x => x.Value);
             if (entries.TryGetValue(username, out var storedPassword))
                 return storedPassword == password;
 
             return false;
         }
 
+        
+
         public Task UpdateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateUserAsync(User user)
         {
             throw new NotImplementedException();
         }

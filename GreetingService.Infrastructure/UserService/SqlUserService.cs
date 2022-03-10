@@ -22,8 +22,7 @@ namespace GreetingService.Infrastructure.UserService
 
         }
 
-
-        public async Task CreateUser(User user)
+        public async Task CreateUserAsync(User user)
         {
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
@@ -31,9 +30,39 @@ namespace GreetingService.Infrastructure.UserService
             await _greetingDbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteUser(string email)
+        public async Task DeleteUserAsync(string email)
         {
-            throw new NotImplementedException();
+            var user = _greetingDbContext.Users.FirstOrDefault(x => x.Email.Equals(email));
+            if (user == null)
+            {
+                _logger.LogError($"Delete User Failed as no user with the email = {email} exists in the DataBase");
+                throw new Exception();
+            }
+
+            _greetingDbContext.Remove(user);
+            await _greetingDbContext.SaveChangesAsync();
+        }
+        public async Task UpdateUserAsync(User user)
+        {
+            var existingUser = await _greetingDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(user.Email));
+            if (existingUser == null)
+            {
+                _logger.LogError("User Not Found");
+                throw new Exception("User Not Found");
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Password))
+                existingUser.Password = user.Password;
+
+            if (!string.IsNullOrWhiteSpace(user.LastName))
+                existingUser.LastName = user.LastName;
+
+            if (!string.IsNullOrWhiteSpace(user.FirstName))
+                existingUser.FirstName = user.FirstName;
+
+            existingUser.UpdatedAt = DateTime.Now;
+            await _greetingDbContext.SaveChangesAsync();
+
         }
 
         public async Task<User> GetUserAsync(string email)
@@ -57,11 +86,13 @@ namespace GreetingService.Infrastructure.UserService
             return false;
         }
 
-        public async Task UpdateUser(User user)
+        public async Task<bool> IsValidUserAsync(string username, string password)
         {
-            throw new NotImplementedException();
-        }
+            var user = _greetingDbContext.Users.FirstOrDefault(x => x.Email.Equals(username));
+            if (user != null && user.Password.Equals(password))
+                return true;
 
-      
+            return false;
+        }
     }
 }

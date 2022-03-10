@@ -9,6 +9,6 @@ namespace GreetingService.API.Functions.Authentication
 {
     public interface IAuthHandler
     {
-        public bool IsAuthorized(HttpRequest req);
+        public Task<bool> IsAuthorizedAsync(HttpRequest req);
     }
 }

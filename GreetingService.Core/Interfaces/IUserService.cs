@@ -12,8 +12,9 @@ namespace GreetingService.Core.Interfaces
         public bool IsValidUser(string username, string password);
         public Task<User> GetUserAsync(string email);
         public Task<IEnumerable<User>> GetUsersAsync();
-        public Task CreateUser(User user);
-        public Task UpdateUser(User user);
-        public Task DeleteUser(string email);
+        public Task CreateUserAsync(User user);
+        public Task UpdateUserAsync(User user);
+        public Task DeleteUserAsync(string email);
+        Task<bool> IsValidUserAsync(string v1, string v2);
     }
 }

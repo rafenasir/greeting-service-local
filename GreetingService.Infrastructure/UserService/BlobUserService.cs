@@ -27,12 +27,12 @@ namespace GreetingService.Infrastructure
 
         }
 
-        public Task CreateUser(User user)
+        public Task CreateUserAsync(User user)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteUser(string email)
+        public Task DeleteUserAsync(string email)
         {
             throw new NotImplementedException();
         }
@@ -48,6 +48,11 @@ namespace GreetingService.Infrastructure
         }
 
         public bool IsValidUser(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> IsValidUserAsync(string username, string password)
         {
             var blob = _blobContainerClient.GetBlobClient(_blobName);
             if (!blob.Exists())
@@ -69,6 +74,11 @@ namespace GreetingService.Infrastructure
         }
 
         public Task UpdateUser(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateUserAsync(User user)
         {
             throw new NotImplementedException();
         }

@@ -16,22 +16,22 @@ namespace GreetingService.Infrastructure
             { "Nasir","winter2022" },
         };
 
-        public void CreateUser(User user)
+        public Task CreateUser(User user)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteUser(string email)
+        public Task DeleteUser(string email)
         {
             throw new NotImplementedException();
         }
 
-        public User GetUser(string email)
+        public Task<User> GetUserAsync(string email)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetUsers()
+        public Task<IEnumerable<User>> GetUsersAsync()
         {
             throw new NotImplementedException();
         }
@@ -47,32 +47,7 @@ namespace GreetingService.Infrastructure
             return true;
         }
 
-        public void UpdateUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IUserService.CreateUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IUserService.DeleteUser(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<User> IUserService.GetUser(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<User>> IUserService.GetUsers()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IUserService.UpdateUser(User user)
+        public Task UpdateUser(User user)
         {
             throw new NotImplementedException();
         }

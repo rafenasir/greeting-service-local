@@ -36,14 +36,14 @@ namespace GreetingService.Infrastructure.UserService
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetUser(string email)
+        public async Task<User> GetUserAsync(string email)
         {
             var user = await _greetingDbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
 
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return await _greetingDbContext.Users.ToListAsync();
         }

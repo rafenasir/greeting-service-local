@@ -35,7 +35,7 @@ namespace GreetingService.API.Functions.InvoiceFunctions
 
             foreach (var group in greetingsGrpuedByInvoice)
             {
-                var user = await _userService.GetUser(group.Key.From);
+                var user = await _userService.GetUserAsync(group.Key.From);
                 var invoice = new Invoice
                 {
                     Greetings = group,

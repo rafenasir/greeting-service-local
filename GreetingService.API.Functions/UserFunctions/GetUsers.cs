@@ -21,9 +21,11 @@ namespace GreetingService.API.Functions.UserFunctions
         private readonly IUserService _userService;
 
 
-        public GetUsers(ILogger<GetUsers> log)
+        public GetUsers(ILogger<GetUsers> log, IAuthHandler authHandler, IUserService userService)
         {
             _logger = log;
+            _authHandler = authHandler;
+            _userService = userService;
         }
 
         [FunctionName("GetUsers")]
@@ -36,7 +38,7 @@ namespace GreetingService.API.Functions.UserFunctions
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            if (!await _authHandler.IsAuthorizedAsync(req))
+            if (!_authHandler.IsAuthorized(req))
             {
                 return new UnauthorizedResult();
             }

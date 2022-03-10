@@ -43,7 +43,7 @@ namespace GreetingService.API.Functions
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            if (!await _authhandler.IsAuthorizedAsync(req))
+            if (!_authhandler.IsAuthorized(req))
             {
                 return new UnauthorizedResult();   
             }

@@ -16,7 +16,7 @@ namespace GreetingService.Core
         public string Email { get
             { return _email; }
             set {
-                if (EmailValidator.IsValidEmail(value))
+                if (!EmailValidator.IsValidEmail(value))
                     throw new InvalidEmailException($"{value} is not a proper email address");
                 _email = value;
             } }

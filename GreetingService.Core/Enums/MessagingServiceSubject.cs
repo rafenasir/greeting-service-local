@@ -10,6 +10,7 @@ namespace GreetingService.Core.Enums
     {
         NewGreeting,
         UpdateGreeting,
-        NewUser
+        NewUser,
+        UpdateUser
     }
 }

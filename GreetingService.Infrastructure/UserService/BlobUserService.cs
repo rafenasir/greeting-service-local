@@ -27,6 +27,11 @@ namespace GreetingService.Infrastructure
 
         }
 
+        public Task ApproveUserAsync(string approvalCode)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task CreateUserAsync(User user)
         {
             throw new NotImplementedException();
@@ -71,6 +76,11 @@ namespace GreetingService.Infrastructure
 
             return false;
 
+        }
+
+        public Task RejectUserAsync(string approvalCode)
+        {
+            throw new NotImplementedException();
         }
 
         public Task UpdateUser(User user)

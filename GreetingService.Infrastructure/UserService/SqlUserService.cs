@@ -1,4 +1,5 @@
 ﻿using GreetingService.Core;
+using GreetingService.Core.Exceptions;
 using GreetingService.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -106,6 +107,32 @@ namespace GreetingService.Infrastructure.UserService
                 return true;
 
             return false;
+        }
+
+        public async Task ApproveUserAsync(string approvalCode)
+        {
+            User? user = await GetUserForApprovalAsync(approvalCode);
+            user.ApprovalStatus = UserApprovalStatus.Approved;
+            user.ApprovalStatusNote = $"Approved by an administrator at {DateTime.Now:O}";
+            await _greetingDbContext.SaveChangesAsync();
+        }
+
+        public async Task RejectUserAsync(string approvalCode)
+        {
+            var user = await GetUserForApprovalAsync(approvalCode);
+
+            user.ApprovalStatus = UserApprovalStatus.Rejected;
+            user.ApprovalStatusNote = $"Rejected by an administrator at {DateTime.Now:O}";
+            await _greetingDbContext.SaveChangesAsync();
+        }
+
+        private async Task<User> GetUserForApprovalAsync(string approvalCode)
+        {
+            var user = await _greetingDbContext.Users.FirstOrDefaultAsync(x => x.ApprovalStatus == UserApprovalStatus.Pending && x.ApprovalCode.Equals(approvalCode) && x.ApprovalExpiry > DateTime.Now);
+            if (user == null)
+                throw new UserNotFoundException($"User with approval code: {approvalCode} not found");
+
+            return user;
         }
     }
 }

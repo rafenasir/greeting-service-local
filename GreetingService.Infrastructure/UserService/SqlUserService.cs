@@ -24,8 +24,21 @@ namespace GreetingService.Infrastructure.UserService
 
         public async Task CreateUserAsync(User user)
         {
+            if (await _greetingDbContext.Users.AnyAsync(x => x.Email == user.Email && x.ApprovalStatus == UserApprovalStatus.Approved))
+            {
+                return;
+            }
+            var existingUnapprovedUser = await _greetingDbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email && x.ApprovalStatus != UserApprovalStatus.Approved);
+
+            if (existingUnapprovedUser != null)
+            {
+                _greetingDbContext.Users.Remove(existingUnapprovedUser);
+            }
+
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
+            user.ApprovalStatus = UserApprovalStatus.Pending;
+            user.ApprovalStatusNote = "Awaiting approval from administrator";
             await _greetingDbContext.Users.AddAsync(user);
             await _greetingDbContext.SaveChangesAsync();
         }

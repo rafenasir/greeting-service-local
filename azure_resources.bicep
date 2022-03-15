@@ -218,5 +218,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
         }
       }
     }
+    resource userVerificationSubscription 'subscriptions@2021-06-01-preview' = {
+      name: 'user_approval'
+
+      resource subscriptionRule 'rules@2021-06-01-preview' = {
+        name: 'subject'
+        properties: {
+          correlationFilter: {
+            label: 'NewUser' 
+          }
+          filterType: 'CorrelationFilter'
+        }
+      }
+    }
   }
 }

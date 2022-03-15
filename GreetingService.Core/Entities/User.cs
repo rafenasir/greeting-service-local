@@ -3,6 +3,7 @@ using GreetingService.Core.HelperFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,5 +25,20 @@ namespace GreetingService.Core
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
+        public UserApprovalStatus ApprovalStatus { get; set; }
+        public string ApprovalStatusNote { get; set; }
+        public string ApprovalCode { get; set; } = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)).Replace("/", "").Replace("?", "");      //This code should not be easily guessed. Also remove any / and ? characters to avoid disrupting url routing when calling api
+        public DateTime ApprovalExpiry { get; set; } = DateTime.Now.AddDays(1);                                     //Must be approved within 1 day
     }
+
+    public enum UserApprovalStatus
+    {
+        Approved = 0,
+        Rejected = 1,
+        Pending = 2,
+    }
+
+
+
 }
+

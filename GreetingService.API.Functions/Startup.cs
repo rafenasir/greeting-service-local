@@ -11,12 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System;
 using System.Reflection;
 
 [assembly: FunctionsStartup(typeof(GreetingService.API.Functions.Startup))]
 namespace GreetingService.API.Functions
 {
-    internal class Startup : FunctionsStartup
+    public class Startup : FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
@@ -58,7 +59,11 @@ namespace GreetingService.API.Functions
                 return serviceBusClient.CreateSender("main");
             });
 
+        }
 
+        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+        {
+            builder.ConfigurationBuilder.AddAzureKeyVault(Environment.GetEnvironmentVariable("KeyVaultUri"));
 
         }
     }

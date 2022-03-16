@@ -56,21 +56,21 @@ namespace GreetingService.API.Functions.InvoiceFunctions
                         throw;
                     }
                 }
-                else if(!invoice.Greetings.Any(x => x.Id == greeting.Id))
+                else if (!invoice.Greetings.Any(x => x.Id == greeting.Id))
                 {
                     try
                     {
                         invoice.Greetings = invoice.Greetings.Append(greeting).ToList();
                         await _invoiceService.CreateOrUpdateInvoiceAsync(invoice);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         _logger.LogError(ex, "Failed to update invoice {id} with new Greeting {greetingId}", invoice.Id, greeting.Id);
                         throw;
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed compute invoice for new greeting {id}", greeting.Id);
                 throw;

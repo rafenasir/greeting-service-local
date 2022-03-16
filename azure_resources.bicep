@@ -12,6 +12,8 @@ var functionAppName = '${appName}'
 var sqlServerName = '${appName}sqlserver'
 var sqlDbName = '${appName}sqldb'
 var serviceBusName = 'rafe-sb-dev'
+var keyVaultName = 'rafe-kv-dev'
+var asurgentTenantId = '9583541d-47a0-4deb-9e14-541050ac8bc1'
 
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
@@ -76,7 +78,7 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'LoggingStorageAccount'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${loggingStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(loggingStorageAccount.id, loggingStorageAccount.apiVersion).keys[0].value}'
+          value: '@Microsoft.KeyVault(SecretUri=https://rafe-kv-dev.vault.azure.net/secrets/LoggingStorageAccount/)'
         }
         {
           'name': 'FUNCTIONS_EXTENSION_VERSION'
@@ -100,7 +102,7 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           'name': 'GreetingDbConnectionString'
-          'value': 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=${sqlAdminPassword};'
+          'value': '@Microsoft.KeyVault(SecretUri=https://rafe-kv-dev.vault.azure.net/secrets/GreetingDbConnectionString/)'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
@@ -108,7 +110,11 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
         name: 'ServiceBusConnectionString'
-        value: listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString
+        value: '@Microsoft.KeyVault(SecretUri=https://rafe-kv-dev.vault.azure.net/secrets/ServiceBusConnectionString/)'
+        }
+        {
+          name: 'KeyVaultUri'
+          value: 'https:////rafe-kv-dev.vault.azure.net/'
         }
       ]
     }
@@ -231,5 +237,29 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
         }
       }
     }
+  }
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
+  name: keyVaultName
+  location: location
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: asurgentTenantId
+    accessPolicies:[
+      {
+        permissions:{
+          secrets:[
+            'get'
+            'list'
+          ]
+        }
+        objectId: functionApp.identity.principalId
+        tenantId: asurgentTenantId
+      }
+    ]
   }
 }

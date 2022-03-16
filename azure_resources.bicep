@@ -262,4 +262,30 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
       }
     ]
   }
+  resource loggingStorageAccountSecret 'secrets@2021-11-01-preview' = {
+    name: 'LoggingStorageAccount'
+    properties: {
+      value: 'DefaultEndpointsProtocol=https;AccountName=${loggingStorageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(loggingStorageAccount.id, loggingStorageAccount.apiVersion).keys[0].value}'
+    }
+  }
+  resource greetingDbConnectionStringSecret 'secrets@2021-11-01-preview' = {
+    name: 'GreetingDbConnectionString'
+    properties: {
+      value: 'Data Source=tcp:${reference(sqlServer.id).fullyQualifiedDomainName},1433;Initial Catalog=${sqlDbName};User Id=${sqlAdminUser};Password=\'${sqlAdminPassword}\';'
+    }
+  }
+
+  resource serviceBusConnectionStringSecret 'secrets@2021-11-01-preview' = {
+    name: 'ServiceBusConnectionString'
+    properties: {
+      value: listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString
+    }
+  }
+
+  resource greetingServiceBaseUrlSecret 'secrets@2021-11-01-preview' = {
+    name: 'GreetingServiceBaseUrl'
+    properties: {
+      value: 'https://${appName}.azurewebsites.net'
+    }
+  }
 }

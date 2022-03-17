@@ -114,7 +114,7 @@ resource functionApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'KeyVaultUri'
-          value: 'https:////rafe-kv-dev.vault.azure.net/'
+          value: 'https://rafe-kv-dev.vault.azure.net/'
         }
       ]
     }

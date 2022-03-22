@@ -6,6 +6,7 @@ using GreetingService.Infrastructure;
 using GreetingService.Infrastructure.MessagingService;
 using GreetingService.Infrastructure.TeamApproval;
 using GreetingService.Infrastructure.UserService;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,24 +22,26 @@ namespace GreetingService.API.Functions
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            
+
             var config = builder.GetContext().Configuration;
-            
-            builder.Services.AddLogging(c => { 
-                var connnectionString = config["LoggingStorageAccount"]; 
-                if(string.IsNullOrWhiteSpace(connnectionString))
+
+            builder.Services.AddLogging(c =>
+            {
+                var connnectionString = config["LoggingStorageAccount"];
+                if (string.IsNullOrWhiteSpace(connnectionString))
                     return;
                 var logName = $"{Assembly.GetCallingAssembly().GetName().Name}.log";
                 var logger = new LoggerConfiguration()
-                                .WriteTo.AzureBlobStorage(connnectionString, 
+                                .WriteTo.AzureBlobStorage(connnectionString,
                                                             restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
-                                                            storageFileName: "{yyyy}/{MM}/{dd}/" + logName ,
+                                                            storageFileName: "{yyyy}/{MM}/{dd}/" + logName,
                                                             outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}")
                                 .CreateLogger();
                 c.AddSerilog(logger, true);
-                    });
+            });
 
-            builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
+            //builder.Services.AddScoped<IGreetingRepository, SqlGreetingRepository>();
+            builder.Services.AddScoped<IGreetingRepository, CosmosDbGreetingRepository>();
             builder.Services.AddScoped<IUserService, SqlUserService>();
             builder.Services.AddScoped<IInvoiceService, SqlInvoiceService>();
             builder.Services.AddScoped<IAuthHandler, BasicAuthHandler>();
@@ -59,12 +62,17 @@ namespace GreetingService.API.Functions
                 return serviceBusClient.CreateSender("main");
             });
 
+            builder.Services.AddSingleton(c =>
+            {
+                var CosmosdbClient = new CosmosClient(config["CosmosConnectionString"]); 
+                return CosmosdbClient;
+            });
         }
 
-        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
-        {
-            builder.ConfigurationBuilder.AddAzureKeyVault(Environment.GetEnvironmentVariable("KeyVaultUri"));
+            public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+            {
+                builder.ConfigurationBuilder.AddAzureKeyVault(Environment.GetEnvironmentVariable("KeyVaultUri"));
 
-        }
+            }
     }
 }
